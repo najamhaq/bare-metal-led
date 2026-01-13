@@ -4,7 +4,9 @@
 
 .global g_pfnVectors
 .global Reset_Handler
+.global Timer_Handler
 .extern main
+.extern SysTick_Handler
 
 /* 128 KB RAM @ 0x20000000 -> top = 0x20020000 */
 .equ _estack, 0x20020000
@@ -26,7 +28,7 @@ g_pfnVectors:
   .word Default_Handler + 1
   .word 0
   .word Default_Handler + 1
-  .word Default_Handler + 1
+  .word SysTick_Handler + 1 
 
   /* IRQs */
   .rept 48

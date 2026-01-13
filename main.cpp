@@ -15,6 +15,11 @@
 #define P1_OUTSET (*(volatile uint32_t *)(GPIO_1_BASE + 0x508))
 #define P1_OUTCLR (*(volatile uint32_t *)(GPIO_1_BASE + 0x50C))
 
+#define SYST_CSR (*(volatile uint32_t*)0xE000E010)
+#define SYST_RVR (*(volatile uint32_t*)0xE000E014)
+#define SYST_CVR (*(volatile uint32_t*)0xE000E018)
+
+
 
 static inline void delay_cycles(volatile uint32_t n) {
     while (n--) __asm volatile ("nop");
@@ -52,6 +57,54 @@ static void set_low(gpio_t gpio) {
     P1_OUTCLR = BIT(gpio.pin);
 }
 
+static volatile uint32_t ms = 0;
+static volatile uint32_t led = 0;
+static volatile uint32_t ticker = 0;
+
+void init_systick(uint32_t ticks) {
+    SYST_RVR = ticks - 1; // Set reload register
+    SYST_CVR = 0;        // Load the SysTick Counter Value
+    SYST_CSR = 0x07;        // ENABLE(1) | TICKINT(2) | CLKSOURCE(4=CPU)
+    ticker = 0;
+    ms = 0;
+}
+
+void tick(){
+    // Turn all LED off
+    for (int i = 0; i < 5; i++) {
+        set_high(col_pins[i]); // Turn it OFF
+        set_low(row_pins[i]); // Turn it OFF
+    }
+
+    for (int i = 0; i < 5; i++) {
+        set_low(col_pins[i]); // Turn it ON
+        set_high(row_pins[i]); // Turn it ON
+        delay_cycles(50000 * 100);
+    }
+    for (int i = 0; i < 5; i++) {
+        set_high(col_pins[i]); // Turn it OFF
+        set_low(row_pins[i]); // Turn it OFF
+        delay_cycles(50000 * 100);
+    }
+
+
+}
+
+void led_test(){
+    set_low(col_pins[3]); // Turn it ON
+    set_high(row_pins[3]); // Turn it ON
+
+}
+
+extern "C" void SysTick_Handler(void){
+    ms++;
+    if (ms >= 3000) { // every 30 seconds
+        ms = 0;
+        ticker = 1;
+    }
+
+}
+
 
 
 int main(void) {
@@ -63,18 +116,13 @@ int main(void) {
         set_high(col_pins[i]); // Default HIGH (OFF)
         set_low(row_pins[i]); // Default LOW (OFF)
     }
+    init_systick(63999); // 1ms at 64 MHz
 
-
+    //led_test();
      while (1) {
-        for (int i = 0; i < 5; i++) {
-            set_low(col_pins[i]); // Turn it ON
-            set_high(row_pins[i]); // Turn it ON
-            delay_cycles(50000 * 100);
-        }
-        for (int i = 0; i < 5; i++) {
-            set_high(col_pins[i]); // Turn it ON
-            set_low(row_pins[i]); // Turn it ON
-            delay_cycles(50000 * 100);
+        if (ticker) {
+            tick();
+            ticker = 0;
         }
         /* nothing */
     }
