@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "pyOCD gdbserver (nrf52833, 3333/4444)",
+      "type": "process",
+      "command": "C:/Users/mnajm/AppData/Local/Programs/Python/Python313/Scripts/pyocd.exe",
+      "args": [
+        "gdbserver",
+        "-t",
+        "nrf52833",
+        "-u",
+        "9906360200052820bb02bd368c596eab000000006e052820",
+        "--port",
+        "3333",
+        "--telnet-port",
+        "4444",
+        "--persist",
+        "-v"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "pyocd",
+        "pattern": [
+          {
+            "regexp": "^(.*)$"
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "GDB server listening on port 3333"
+        }
+      }
+    }
+  ]
+}

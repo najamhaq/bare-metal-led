@@ -18,7 +18,9 @@ set(CPU_FLAGS
 
 target_compile_options(${ELF_TARGET} PRIVATE
   ${CPU_FLAGS}
-  -O2 -ffreestanding
+  $<$<CONFIG:Debug>:-Og -g3>
+  $<$<CONFIG:Release>:-O2>
+  -ffreestanding
   -fdata-sections -ffunction-sections
   -Wall -Wextra
 )

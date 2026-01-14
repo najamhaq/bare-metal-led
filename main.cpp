@@ -69,7 +69,7 @@ void init_systick(uint32_t ticks) {
     ms = 0;
 }
 
-void tick(){
+void animation_step() {
     // Turn all LED off
     for (int i = 0; i < 5; i++) {
         set_high(col_pins[i]); // Turn it OFF
@@ -86,9 +86,30 @@ void tick(){
         set_low(row_pins[i]); // Turn it OFF
         delay_cycles(50000 * 100);
     }
-
-
 }
+
+void led_on(uint32_t row, uint32_t col) {
+    set_low(col_pins[col]); // Turn it ON
+    set_high(row_pins[row]); // Turn it ON
+}   
+
+void led_off(uint32_t row, uint32_t col) {
+    set_high(col_pins[col]); // Turn it OFF
+    set_low(row_pins[row]); // Turn it OFF
+}
+
+void blink_led(uint32_t row, uint32_t col, uint32_t delay__ms = 300) {
+    // Turn all LED off
+    led_on(row, col);
+    delay_cycles(delay__ms * 100);
+    led_off(row, col);
+    delay_cycles(delay__ms * 100);  // this may not be necessary , unless we are clalling multipl blin at the same time
+}
+
+void tick() {
+    blink_led(2,1);
+}
+
 
 void led_test(){
     set_low(col_pins[3]); // Turn it ON
@@ -98,7 +119,7 @@ void led_test(){
 
 extern "C" void SysTick_Handler(void){
     ms++;
-    if (ms >= 3000) { // every 30 seconds
+    if (ms >= 5000) { // every 30 seconds
         ms = 0;
         ticker = 1;
     }
