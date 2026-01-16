@@ -3,6 +3,8 @@
 # =========================
 build/
 build/*
+build-host/
+build-host/*
 *.elf
 *.hex
 *.map
