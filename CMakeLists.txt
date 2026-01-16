@@ -80,3 +80,17 @@ add_custom_target(deploy
         DEPENDS ${ELF_TARGET}
         VERBATIM
 )
+
+# ------ Setup debug  server ------
+add_custom_target(debugserver
+        COMMAND pyocd gdbserver
+        --target nrf52833
+        --port 3333
+        --telnet-port 4444
+        --persist
+        -O frequency=200000
+        -O connect_mode=under-reset
+        -O cmsis_dap.limit_packets=true
+        VERBATIM
+        USES_TERMINAL
+)

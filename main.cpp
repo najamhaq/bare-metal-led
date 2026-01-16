@@ -1,5 +1,12 @@
 #include <stdint.h>
 
+
+#if defined(DEBUG) || defined(_DEBUG)
+  #define DBG_ANCHOR() __asm volatile("nop")
+#else
+  #define DBG_ANCHOR() do {} while(0)
+#endif
+
 #define GPIO_0_BASE   0x50000000UL
 #define GPIO_1_BASE   0x50000300UL
 
@@ -141,6 +148,7 @@ int main(void) {
 
     //led_test();
      while (1) {
+        __asm volatile("nop");   // anchor for stepping
         if (ticker) {
             tick();
             ticker = 0;
