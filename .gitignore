@@ -5,6 +5,7 @@ build/
 build/*
 build-host/
 build-host/*
+Testing/
 *.elf
 *.hex
 *.map

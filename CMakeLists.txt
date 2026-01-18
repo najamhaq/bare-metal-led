@@ -29,6 +29,9 @@ if(BUILD_FIRMWARE)
             include/queue.h
             src/queue.cpp
     )
+    target_include_directories(${ELF_TARGET} PRIVATE
+            include
+    )
 
     # CPU / ABI flags for nRF52833 (micro:bit v2)
     set(CPU_FLAGS

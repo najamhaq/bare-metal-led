@@ -6,26 +6,38 @@
 #define MICROBIT_BAREMETAL_MESSAGE_H
 
 #include <stdint.h>
+#include <stddef.h>
+
+enum MessageType {
+  MESSAGE_TYPE_NONE = 0,
+  MESSAGE_TYPE_TICK = 1,
+  MESSAGE_TYPE_BUTTON_A = 2,
+  MESSAGE_TYPE_BUTTON_B = 3,
+  MESSAGE_TYPE_BUTTON_AB = 4,
+  MESSAGE_TYPE_ACCELEROMETER = 5,
+  MESSAGE_TYPE_COMPASS = 6,
+  MESSAGE_TYPE_GESTURE = 7,
+  MESSAGE_TYPE_PIN_CHANGED = 8,
+  MESSAGE_TYPE_TOUCH_PIN = 9,
+  MESSAGE_TYPE_LIGHT_LEVEL = 10,
+  MESSAGE_TYPE_SOUND_LEVEL = 11,
+  MESSAGE_TYPE_TEMPERATURE = 12,
+  MESSAGE_TYPE_SHAKE = 13,
+  MESSAGE_TYPE_LOG = 14,
+  MESSAGE_TYPE_RADIO = 15,
+  MESSAGE_TYPE_UART = 16,
+  MESSAGE_TYPE_I2C = 17,
+  MESSAGE_TYPE_SPI = 18,
+  MESSAGE_TYPE_DISPLAY_UPDATE = 19,
+  // add more as needed
+};
+
+
 typedef struct {
-    uint16_t type;
+    MessageType type;
     uint16_t param;
     uint32_t data;
 } Message ;
-
-
-typedef struct {
-    uint16_t type;
-    uint16_t param;
-    uint32_t data;
-} msg_t;
-
-typedef struct {
-    msg_t  *buf;
-    size_t  cap;   // number of messages
-    size_t  head;  // write
-    size_t  tail;  // read
-    size_t  len;   // count
-} msg_queue_t;
 
 
 #endif //MICROBIT_BAREMETAL_MESSAGE_H
