@@ -28,6 +28,8 @@ if(BUILD_FIRMWARE)
             src/message.cpp
             include/queue.h
             src/queue.cpp
+            include/irq.h
+            src/irq_arm.c
     )
     target_include_directories(${ELF_TARGET} PRIVATE
             include
@@ -170,6 +172,8 @@ if(BUILD_TESTS AND NOT CMAKE_CROSSCOMPILING)
     add_executable(test_queue
             tests/test_queue.cpp
             src/queue.cpp
+            include/irq.h
+            src/irq_host..c
     )
     target_include_directories(test_queue PRIVATE
             include

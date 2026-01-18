@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include "message.h"
 #include "queue.h"
+#include "irq.h"
 
 Queue::Queue()  : m_buf(nullptr), m_capacity(0), m_read(0), m_write(0), m_message_count(0)
 {
@@ -42,11 +43,12 @@ bool Queue::push(const Message& msg)
   if (isFull())  {
     return false;
   }
-   // This needs to account for concurrency with main loop popping messages , or elsewhere
+  uint32_t irq_state = irq_save_disable();
   if (m_write >= m_capacity) {
     // rollover to the beginning
     if (m_read ==  0) {
       // no space
+      irq_restore(irq_state);
       return false;
     }
     m_write = 0;
@@ -55,6 +57,7 @@ bool Queue::push(const Message& msg)
   m_buf[m_write] = msg;
   m_message_count++;
   m_write++;
+  irq_restore(irq_state);
   return true;
 }
 
@@ -65,7 +68,7 @@ bool Queue::pop(Message& out)
   {
     return false;
   }
-  // This needs to account for concurrency with ISR pushing messages
+  uint32_t irq_state = irq_save_disable();
 
   if (m_message_count > 0 && m_read >= m_capacity) {
     // rollover to the beginning
@@ -74,6 +77,7 @@ bool Queue::pop(Message& out)
   out = m_buf[m_read];
   m_message_count--;
   m_read++;
+  irq_restore(irq_state);
   return true;
 }
 

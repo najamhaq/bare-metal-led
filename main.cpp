@@ -90,10 +90,15 @@ static void set_low(gpio_t gpio)
   }
   P1_OUTCLR = BIT(gpio.pin);
 }
-
+/***************************************
+ * All static data is defined here
+****************************************/
 static volatile uint32_t ms = 0;
 static volatile uint32_t led = 0;
 static volatile uint32_t ticker = 0;
+Message messages[40];
+Queue queue;
+uint32_t lastButton = 0;
 
 void init_systick(uint32_t ticks)
 {
@@ -188,9 +193,6 @@ static inline bool buttonB_pressed()
 }
 
 
-Message messages[40];
-Queue queue;
-uint32_t lastButton = 0;
 
 extern "C" void SysTick_Handler(void)
 {
