@@ -5,9 +5,6 @@
 #ifndef MICROBIT_BAREMETAL_IRQ_H
 #define MICROBIT_BAREMETAL_IRQ_H
 
-
-
-#pragma once
 #include <stdint.h>
 
 #ifdef __cplusplus
